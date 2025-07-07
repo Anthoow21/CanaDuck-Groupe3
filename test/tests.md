@@ -66,7 +66,7 @@ Scénario 1 :
 }
 ```
 - vérification que le canal est visible dans `GET /channel`
-- appel de la route pour mettre le canal en privé
+- appel de la route `POST /channel/testMode/mode` pour mettre le canal en privé
 - appel de `GET /channel`
 Résultat attendu : le canal `testMode` n'est plus visible dans la liste des canaux publics
 
