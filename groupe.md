@@ -17,3 +17,4 @@ Malgres que chaque personnes ait des tâches, cela n'empeche pas qu'on peux deme
 
 ### Deuxieme partie 
 11h06: Finition premiers scénario de test (L), Décodage et codage du token JWT, modification de swogger pour l'utilisation de flasger (A), Requirement_mont testé, test des dockeurs localement (C), harmonisation, et rédaction du author et README (M).
+12h: Implémentation des tests (L),Docker compose fini (C), Décode du JWT + gestion des autorisations (A), Rédaction de la documentation + readme.md(M)
