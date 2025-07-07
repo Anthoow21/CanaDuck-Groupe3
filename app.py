@@ -7,8 +7,6 @@ import jwt
 
 JWT_SECRET = "on-ny-arrivera-jamais-enfin-peut-etre"
 
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwc2V1ZG8iOiJyb2dlciIsInJvbGVzIjpbIm1vZGVyYXRvciJdLCJleHAiOjIwMDAwMDAwMDB9.E_fb6fM8MZzgP5W1B10b-GLSVJWOERo8SG9A3HgQsJk"
-
 def decode_jwt(token):
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
@@ -81,12 +79,12 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 
-app.config["SQLALCHEMY_DATABARE_URI"] = {
-    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-}
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# app.config["SQLALCHEMY_DATABARE_URI"] = {
+#     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# }
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db.init_app(app)
+#db.init_app(app)
 
 @app.route('/channel', methods=['GET'])
 def list_channels():
@@ -109,7 +107,7 @@ def list_channels():
 
 
 @app.route('/channel', methods=['POST'])
-@require_role("moderator")
+@require_role("admin")
 def create_channel():
     """
     Créer un nouveau canal
@@ -139,9 +137,7 @@ def create_channel():
       409:
         description: Canal déjà existant
     """
-
-    payload = decode_jwt(token)
-    return payload["pseudo"]
+    return "coucou"
 
 @app.route('/channel/<name>/users', methods=['GET'])
 def list_users_in_channel(name):
@@ -166,6 +162,8 @@ def list_users_in_channel(name):
     pass
 
 @app.route('/channel/<name>', methods=['PATCH'])
+@require_role("moderator")
+@require_role("admin")
 def update_channel(name):
     """
     Modifier le sujet et/ou les modes d’un canal
