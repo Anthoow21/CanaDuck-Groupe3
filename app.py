@@ -81,12 +81,12 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 
-# app.config["SQLALCHEMY_DATABARE_URI"] = {
-#     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-# }
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABARE_URI"] = {
+    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+}
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-#db.init_app(app)
+db.init_app(app)
 
 @app.route('/channel', methods=['GET'])
 def list_channels():
@@ -103,11 +103,13 @@ def list_channels():
           items:
             $ref: '#/definitions/Channel'
     """
+
     payload = decode_jwt(token)
     return payload["pseudo"]
 
 
 @app.route('/channel', methods=['POST'])
+@require_role("moderator")
 def create_channel():
     """
     Créer un nouveau canal
@@ -137,7 +139,9 @@ def create_channel():
       409:
         description: Canal déjà existant
     """
-    pass
+
+    payload = decode_jwt(token)
+    return payload["pseudo"]
 
 @app.route('/channel/<name>/users', methods=['GET'])
 def list_users_in_channel(name):
