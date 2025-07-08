@@ -10,10 +10,10 @@ services:
     networks:
     - traefik
     depends_on:
-      channel-mysql:
+      mysql:
         condition: service_healthy
 
-  channel-mysql:
+  mysql:
     image: mysql:8
     restart: always
     environment:
