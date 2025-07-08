@@ -27,6 +27,7 @@ Les objectifs à faire sont :
 3. Ouvrir le fichier téléchargé depuis la cmd (via des commandes comme ls ou cd)
 4. Tapez la commande '''sudo docker-compose up --build -d'''
 
+```bash
 Voici les étapes qui se produisent lorsque l'on exécute le docker-compose :
     Step 1/5 : FROM python:3.11-slim
     ---> 0b14a859cdba
@@ -44,7 +45,8 @@ Voici les étapes qui se produisent lorsque l'on exécute le docker-compose :
     Successfully built 99814d77ff2a
     Successfully tagged canaduck-groupe3_channel-service:latest
     Creating canaduck-groupe3_mysql_1 ... done
-    Creating canaduck-groupe3_channel-service_1 ... done
+    Creating canaduck-groupe3_channel-service_1 ... done 
+```
 
 ## Exemples d'appel
 
