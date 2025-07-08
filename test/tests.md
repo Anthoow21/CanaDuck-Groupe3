@@ -102,3 +102,48 @@ Scénario 4 :
 - appel de la route avec un mode qui n'existe pas
 Résultat attendu : erreur dans la réponse JSON
 
+## Bannir un utilisateur
+
+Scénario 1 :
+- Bannissement d'un utilisateur `Philibert` avec `POST /channel/<nom>/ban`
+```json
+{
+    "name": "Philibert",
+}
+```
+Résultat attendu : Bannissement de l'utilisateur 'Philibert'
+
+Scénario 2 :
+- Bannissement d'un utilisateur `Philibert` avec `POST /channel/<nom>/ban` sans les droits
+```json
+{
+    "name": "Philibert",
+}
+```
+Résultat attendu : Retour d'une réponse expliquant qu'on pocede pas les droits pour bannir.
+
+Scénario 3 :
+- Bannissement d'un utilisateur non exisitant `trucmuche` avec `POST /channel/<nom>/ban`
+```json
+{
+    "name": "trucmuche",
+}
+```
+Resultat attendu : Retour d'erreur : L'utilisateur n'exisite pas
+Scénario 4 :
+- Bannissement d'un utilisateur n'ayant pas rejoint le channel, `AltDePhilibert` avec `POST /channel/<nom>/ban`
+```json
+{
+    "name": "AltDePhilibert",
+}
+```
+Résultat attendu : Erreur disant que la personne n'a pas rejoint le channel.
+Scénario 5 :
+- Bannissement d'un utilisateur NULL ` ` avec `POST /channel/<nom>/ban`
+```json
+{
+    "name": " ",
+    "channel": "jesaispascequejefaismaisjefaisensortequepersonneecriveca"
+}
+```
+Résultat attendu : Erreur disant que la personne n'exisite pas.
