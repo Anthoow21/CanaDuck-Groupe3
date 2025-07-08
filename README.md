@@ -22,14 +22,14 @@ Les objectifs à faire sont :
 
 ## Instruction de lancement
 
-1- Télécharger le dépôt git.
-2- Ouvrir la cmd
-3- Ouvrir le fichier téléchargé depuis la cmd (via des commandes comme ls ou cd)
-4- Tapez la commande '''docker compose up -d'''
+1. Télécharger le dépôt git.
+2. Ouvrir la cmd
+3. Ouvrir le fichier téléchargé depuis la cmd (via des commandes comme ls ou cd)
+4. Tapez la commande '''docker compose up -d'''
 ## Exemples d'appel
 
 Un utilisateur arrive et veut parler de son sujet préféré : du magret de canard.
 Il cherche un channel et va donc chercher "IP/channel" pour chercher un channel et décide d'utiliser la commande pour rejoindre le channel "CanardEnjoyer".
-Parlant de son sujet préféré, l'un des modérateurs utilise la commande "IP/channel/<nom>/ban" pour bannir notre utilisateur fan de magrets de canard.
+Parlant de son sujet préféré, l'un des modérateurs utilise la commande "IP/channel/nom/ban" pour bannir notre utilisateur fan de magrets de canard.
 Ce dernier crée un channel via un curl "/channel" avec des données, pour créer son channel.
- Il décide d'inviter des personnes en curl via le "/channel/<nom>/invite"
+ Il décide d'inviter des personnes en curl via le "/channel/nom/invite"
