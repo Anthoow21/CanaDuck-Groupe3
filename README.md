@@ -27,8 +27,8 @@ Les objectifs à faire sont :
 3. Ouvrir le fichier téléchargé depuis la cmd (via des commandes comme ls ou cd)
 4. Tapez la commande '''sudo docker-compose up --build -d'''
 
-```bash
 Voici les étapes qui se produisent lorsque l'on exécute le docker-compose :
+```bash
     Step 1/5 : FROM python:3.11-slim
     ---> 0b14a859cdba
     Step 2/5 : WORKDIR /app
