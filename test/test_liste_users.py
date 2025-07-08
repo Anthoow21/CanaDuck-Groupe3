@@ -3,6 +3,7 @@
 import requests
 
 SERVICE_URL = '127.0.0.1'
+AUTH = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwc2V1ZG8iOiJyb2dlciIsInJvbGVzIjpbIm1vZGVyYXRvciJdLCJleHAiOjIwMDAwMDAwMDB9.E_fb6fM8MZzgP5W1B10b-GLSVJWOERo8SG9A3HgQsJk'
 
 def scenario_one(channel: str):
     """
@@ -11,7 +12,8 @@ def scenario_one(channel: str):
 
     # Create a channel
     data = {"name": channel, "private": False}
-    requests.post(f'{SERVICE_URL}/channel', json=data)
+    headers = {"authorization": AUTH}
+    requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
 
     # List users of the channel
     r = requests.get(f'{SERVICE_URL}/channel/{channel}/users')
@@ -20,7 +22,7 @@ def scenario_one(channel: str):
 
     # Add a user in the channel
     data = {"name": "user1"}
-    requests.post(f'{SERVICE_URL}/channel/{channel}/invite', json=data)
+    requests.post(f'{SERVICE_URL}/channel/{channel}/invite', json=data, headers=headers)
 
     # List users of the channel
     r = requests.get(f'{SERVICE_URL}/channel/{channel}/users')
