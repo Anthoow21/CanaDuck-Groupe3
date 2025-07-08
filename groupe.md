@@ -21,3 +21,11 @@ Malgré que chaque personne ait des tâches, cela n'empêche pas qu'on puisse de
 
 ## Deuxieme cours
 ### Premiere partie du cours
+
+14h10 : README.md, author.md => Fini et corrigé (M)
+        Ecrit les demades des routes GET (Ralenti car l'API est pas joiniable) (A)
+        Test des routes (GET/POST /channel + /channel/<nom>/mode) (L) 
+        Réparation de l'API (C)
+        Aide aux tests (M)
+
+    
