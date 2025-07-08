@@ -23,9 +23,26 @@ Malgré que chaque personne ait des tâches, cela n'empêche pas qu'on puisse de
 ### Premiere partie du cours
 
 14h10 : README.md, author.md => Fini et corrigé (M)
-        Ecrit les demades des routes GET (Ralenti car l'API est pas joiniable) (A)
+        
+
+14h55 : Ecriture des demandes des routes GET (Ralenti car l'API est pas joiniable) (A)
         Test des routes (GET/POST /channel + /channel/<nom>/mode) (L) 
         Réparation de l'API (C)
-        Aide aux tests (M)
+        Scénari d'un test fait (M)
 
-    
+#### Projection : 
+    Routes (Toutes) + Test BDD (A)
+    README Update (C)
+    /channel/nom/users (L)
+    Ecriture des scénarie des test du banissement (M)
+### Deuxieme partie
+16h03 : GET/channel fonctionnel (A)
+
+16h20 : /user (encore en cours) (L)
+        Ecrire les tests de bans (M)
+        Update du readùe.md + travail sur les routes (C)
+        TOutes les routes sont écrites sans test (A)
+
+17h :   Rédaction des tests (L + M)
+        Sychronisation avec le groupe 4 (C)
+        Ajout traefik pour liaison avec les autres groupes.(A)
