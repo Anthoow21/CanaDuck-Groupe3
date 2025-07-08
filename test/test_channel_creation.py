@@ -2,6 +2,8 @@
 
 import requests
 
+SERVICE_URL = '127.0.0.1'
+
 def scenario_one(channel: str):
     """
     Create a channel. It should be visible when calling /GET channel.
@@ -9,15 +11,15 @@ def scenario_one(channel: str):
 
     data = {"name": channel, "private": False}
 
-    requests.post('.../channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data)
     
-    r = requests.get('.../channel')
+    r = requests.get(f'{SERVICE_URL}/channel')
     assert r.status_code == 200
 
     json_response = r.json()
     # to do : assert json_response...
 
-    requests.delete(f'.../channel/{channel}')
+    requests.delete(f'{SERVICE_URL}/channel/{channel}')
 
 def scenario_two(channel: str):
     """
@@ -26,15 +28,15 @@ def scenario_two(channel: str):
 
     data = {"name": channel, "private": True}
 
-    requests.post('.../channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data)
     
-    r = requests.get('.../channel')
+    r = requests.get(f'{SERVICE_URL}/channel')
     assert r.status_code == 200
 
     json_response = r.json()
     # to do : assert json_response...
 
-    requests.delete(f'.../channel/{channel}')
+    requests.delete(f'{SERVICE_URL}/channel/{channel}')
 
 def scenario_three():
     """
@@ -43,9 +45,9 @@ def scenario_three():
 
     data = {"name": "", "private": False}
 
-    requests.post('.../channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data)
     
-    r = requests.get('.../channel')
+    r = requests.get(f'{SERVICE_URL}/channel')
     json_response = r.json()
 
     # to do : assert json_response...
