@@ -5,6 +5,8 @@ from flasgger import Swagger
 from functools import wraps
 import jwt
 
+
+
 JWT_SECRET = "on-ny-arrivera-jamais-enfin-peut-etre"
 
 def decode_jwt(token):
@@ -79,12 +81,15 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 
-# app.config["SQLALCHEMY_DATABARE_URI"] = {
-#     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-# }
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABARE_URI"] = {
+    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+}
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-#db.init_app(app)
+with app.app_context():
+    db.create_all()
+    
+db.init_app(app)
 
 @app.route('/channel', methods=['GET'])
 def list_channels():
@@ -101,13 +106,14 @@ def list_channels():
           items:
             $ref: '#/definitions/Channel'
     """
-
-    payload = decode_jwt(token)
-    return payload["pseudo"]
+    # Appel à la bdd pour retourner la liste des canaux
+    channels = db.session.query(Channel).filter_by(private=False).all()
+    return jsonify([channel.to_dict() for channel in channels]), 200
 
 
 @app.route('/channel', methods=['POST'])
-@require_role("admin")
+@require_role("owner")
+@require_role("moderator")
 def create_channel():
     """
     Créer un nouveau canal
@@ -137,7 +143,18 @@ def create_channel():
       409:
         description: Canal déjà existant
     """
-    return "coucou"
+    data = request.get_json()
+    if not data or 'name' not in data or 'private' not in data:
+        return jsonify({"error": "Nom et statut privé requis"}), 400
+    name = data['name']
+    private = data['private']
+    existing_channel = db.session.query(Channel).filter_by(name=name).first()
+    if existing_channel:
+        return jsonify({"error": "Canal déjà existant"}), 409
+    new_channel = Channel(name=name, private=private, owner=request.user['username'])
+    db.session.add(new_channel)
+    db.session.commit()
+    return jsonify(new_channel.to_dict()), 201
 
 @app.route('/channel/<name>/users', methods=['GET'])
 def list_users_in_channel(name):
@@ -159,11 +176,15 @@ def list_users_in_channel(name):
           items:
             type: string
     """
-    pass
+    # Appel à la bdd pour retourner la liste des utilisateurs dans le canal
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    return jsonify({"usernames": channel.members}), 200
 
 @app.route('/channel/<name>', methods=['PATCH'])
 @require_role("moderator")
-@require_role("admin")
+@require_role("owner")
 def update_channel(name):
     """
     Modifier le sujet et/ou les modes d’un canal
@@ -194,7 +215,22 @@ def update_channel(name):
       403:
         description: Non autorisé
     """
-    pass
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Données manquantes"}), 400
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    if 'topic' in data:
+        channel.topic = data['topic']
+    if 'mode' in data:
+        mode = data['mode']
+        if mode not in channel.modes:
+            channel.modes.append(mode)
+        else:
+            return jsonify({"error": "Mode déjà présent"}), 409
+    db.session.commit()
+    return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>', methods=['DELETE'])
 def delete_channel(name):
@@ -245,7 +281,15 @@ def update_topic(name):
       403:
         description: Non autorisé
     """
-    pass
+    data = request.get_json()
+    if not data or 'topic' not in data:
+        return jsonify({"error": "Sujet requis"}), 400
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    channel.topic = data['topic']
+    db.session.commit()
+    return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>/mode', methods=['POST'])
 def add_mode(name):
