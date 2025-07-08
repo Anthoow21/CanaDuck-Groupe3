@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from models import db
+from models import db, Channel, ChannelModerator, ChannelBan, ChannelInvite, ChannelMember, ChannelMode
 from flasgger import Swagger
 from functools import wraps
 import jwt
@@ -113,7 +113,6 @@ def list_channels():
 
 
 @app.route('/channel', methods=['POST'])
-@require_role("owner")
 @require_role("moderator")
 def create_channel():
     """
@@ -152,7 +151,7 @@ def create_channel():
     existing_channel = db.session.query(Channel).filter_by(name=name).first()
     if existing_channel:
         return jsonify({"error": "Canal déjà existant"}), 409
-    new_channel = Channel(name=name, private=private, owner=request.user['username'])
+    new_channel = Channel(name=name, private=private, owner=request.user['pseudo'])
     db.session.add(new_channel)
     db.session.commit()
     return jsonify(new_channel.to_dict()), 201
@@ -185,7 +184,6 @@ def list_users_in_channel(name):
 
 @app.route('/channel/<name>', methods=['PATCH'])
 @require_role("moderator")
-@require_role("owner")
 def update_channel(name):
     """
     Modifier le sujet et/ou les modes d’un canal
@@ -226,8 +224,10 @@ def update_channel(name):
         channel.topic = data['topic']
     if 'mode' in data:
         mode = data['mode']
-        if mode not in channel.modes:
-            channel.modes.append(mode)
+        existing_modes = [m.mode for m in channel.modes]
+        if mode not in existing_modes:
+            new_mode = ChannelMode(mode=mode, channel=channel)
+            db.session.add(new_mode)
         else:
             return jsonify({"error": "Mode déjà présent"}), 409
     db.session.commit()
@@ -251,7 +251,13 @@ def delete_channel(name):
       403:
         description: Non autorisé
     """
-    pass
+    # Appel à la bdd pour supprimer le canal
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    db.session.delete(channel)
+    db.session.commit()
+    return jsonify({"message": "Canal supprimé"}), 200
 
 @app.route('/channel/<name>/topic', methods=['POST'])
 def update_topic(name):

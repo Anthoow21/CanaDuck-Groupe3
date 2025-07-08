@@ -17,6 +17,21 @@ class Channel(db.Model):
     invited = db.relationship('ChannelInvite', backref='channel', cascade="all, delete-orphan")
     members = db.relationship('ChannelMember', backref='channel', cascade="all, delete-orphan")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "private": self.private,
+            "topic": self.topic,
+            "owner": self.owner,
+            "created_at": self.created_at.isoformat(),
+            "modes": [m.mode for m in self.modes],
+            "moderators": [m.pseudo for m in self.moderators],
+            "banned": [b.pseudo for b in self.banned],
+            "invited": [i.pseudo for i in self.invited],
+            "members": [m.pseudo for m in self.members],
+        }
+
 class ChannelModerator(db.Model):
     __tablename__ = 'channel_moderators'
 
