@@ -147,3 +147,28 @@ Scénario 5 :
 }
 ```
 Résultat attendu : Erreur disant que la personne n'exisite pas.
+
+## Lister les utilisateurs d'un canal
+
+Scénario 1 :
+- créer un canal `testUserList` avec `POST /channel`
+```json
+{
+    "name": "testUserList",
+    "private": false
+}
+```
+- lister les utilisateurs avec `GET /channel/testUserList/users` : la liste doit être vide
+- inviter un utilisateur `utilisateur1` avec `POST /channel/testUserList/invite`
+```json
+{
+    "name": "utilisateur1"
+}
+```
+- lister les utilisateurs avec `GET /channel/testUserList/users`
+Résultat attendu : la liste des utilisateurs doit contenir `utilisateur1`
+
+Scénario 2 :
+- appel de la route avec un canal qui n'existe pas
+Résultat attendu : erreur dans la réponse JSON
+

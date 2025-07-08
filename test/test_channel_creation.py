@@ -14,7 +14,7 @@ def scenario_one(channel: str):
     requests.post(f'{SERVICE_URL}/channel', json=data)
     
     r = requests.get(f'{SERVICE_URL}/channel')
-    assert r.status_code == 200
+    assert r.status_code == 201
 
     json_response = r.json()
     # to do : assert json_response...
@@ -31,7 +31,7 @@ def scenario_two(channel: str):
     requests.post(f'{SERVICE_URL}/channel', json=data)
     
     r = requests.get(f'{SERVICE_URL}/channel')
-    assert r.status_code == 200
+    assert r.status_code == 201
 
     json_response = r.json()
     # to do : assert json_response...
@@ -48,9 +48,27 @@ def scenario_three():
     requests.post(f'{SERVICE_URL}/channel', json=data)
     
     r = requests.get(f'{SERVICE_URL}/channel')
+    assert r.status_code == 400
     json_response = r.json()
 
     # to do : assert json_response...
+
+def scenario_four(channel: str):
+    """
+    Attempt to create a channel already existing.
+    """
+
+    data = {"name": channel, "private": False}
+
+    # Create a channel
+    requests.post(f'{SERVICE_URL}/channel', json=data)
+
+    # Atempt to create the same channel again
+    r = requests.post(f'{SERVICE_URL}/channel', json=data)
+    assert r.status_code == 409
+
+    requests.delete(f'{SERVICE_URL}/channel/{channel}')
+
 
 if __name__ == '__main__':
     scenario_one('testCreation')
