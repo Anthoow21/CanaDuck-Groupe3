@@ -54,4 +54,4 @@ Un utilisateur arrive et veut parler de son sujet préféré : du magret de cana
 Il cherche un channel et va donc chercher "IP/channel" pour chercher un channel et décide d'utiliser la commande pour rejoindre le channel "CanardEnjoyer".
 Parlant de son sujet préféré, l'un des modérateurs utilise la commande "IP/channel/nom/ban" pour bannir notre utilisateur fan de magrets de canard.
 Ce dernier crée un channel via un curl "/channel" avec des données, pour créer son channel.
- Il décide d'inviter des personnes en curl via le "/channel/nom/invite"
+Il décide d'inviter des personnes en curl via le "/channel/nom/invite"
