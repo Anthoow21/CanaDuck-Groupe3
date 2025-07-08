@@ -327,7 +327,20 @@ def add_mode(name):
       409:
         description: Mode déjà présent
     """
-    pass
+    data = request.get_json()
+    if not data or 'mode' not in data:
+        return jsonify({"error": "Mode requis"}), 400
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    mode = data['mode']
+    existing_modes = [m.mode for m in channel.modes]
+    if mode in existing_modes:
+        return jsonify({"error": "Mode déjà présent"}), 409
+    new_mode = ChannelMode(mode=mode, channel=channel)
+    db.session.add(new_mode)
+    db.session.commit()
+    return jsonify({"message": "Mode ajouté"}), 201
 
 @app.route('/channel/<name>/config', methods=['GET'])
 def get_config(name):
@@ -347,7 +360,10 @@ def get_config(name):
         schema:
           $ref: '#/definitions/Channel'
     """
-    pass
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>/invite', methods=['POST'])
 def invite_user(name):
@@ -378,7 +394,20 @@ def invite_user(name):
       403:
         description: Non autorisé
     """
-    pass
+    data = request.get_json()
+    if not data or 'pseudo' not in data:
+        return jsonify({"error": "Pseudo requis"}), 400
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    pseudo = data['pseudo']
+    existing_invite = db.session.query(ChannelInvite).filter_by(channel_id=channel.id, pseudo=pseudo).first()
+    if existing_invite:
+        return jsonify({"error": "Utilisateur déjà invité"}), 409
+    new_invite = ChannelInvite(channel=channel, pseudo=pseudo)
+    db.session.add(new_invite)
+    db.session.commit()
+    return jsonify({"message": "Utilisateur invité"}), 200
 
 @app.route('/channel/<name>/ban', methods=['POST'])
 def ban_user(name):
@@ -412,8 +441,21 @@ def ban_user(name):
       403:
         description: Non autorisé
     """
-    pass
-
+    data = request.get_json()
+    if not data or 'pseudo' not in data or 'reason' not in data:
+        return jsonify({"error": "Pseudo et raison requis"}), 400
+    channel = db.session.query(Channel).filter_by(name=name).first()
+    if not channel:
+        return jsonify({"error": "Canal non trouvé"}), 404
+    pseudo = data['pseudo']
+    reason = data['reason']
+    existing_ban = db.session.query(ChannelBan).filter_by(channel_id=channel.id, pseudo=pseudo).first()
+    if existing_ban:
+        return jsonify({"error": "Utilisateur déjà banni"}), 409
+    new_ban = ChannelBan(channel=channel, pseudo=pseudo, reason=reason)
+    db.session.add(new_ban)
+    db.session.commit()
+    return jsonify({"message": "Utilisateur banni"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001, host='0.0.0.0')
