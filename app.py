@@ -113,7 +113,7 @@ def list_channels():
 
 
 @app.route('/channel', methods=['POST'])
-@require_role("moderator")
+@require_role("admin")
 def create_channel():
     """
     Créer un nouveau canal
@@ -183,7 +183,7 @@ def list_users_in_channel(name):
     return jsonify({"usernames": channel.members}), 200
 
 @app.route('/channel/<name>', methods=['PATCH'])
-@require_role("moderator")
+@require_role("admin")
 def update_channel(name):
     """
     Modifier le sujet et/ou les modes d’un canal
@@ -234,6 +234,7 @@ def update_channel(name):
     return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>', methods=['DELETE'])
+@require_role("admin")
 def delete_channel(name):
     """
     Supprimer un canal
@@ -260,6 +261,7 @@ def delete_channel(name):
     return jsonify({"message": "Canal supprimé"}), 200
 
 @app.route('/channel/<name>/topic', methods=['POST'])
+@require_role("admin")
 def update_topic(name):
     """
     Modifier uniquement le sujet d’un canal
@@ -299,6 +301,7 @@ def update_topic(name):
     return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>/mode', methods=['POST'])
+@require_role("admin")
 def add_mode(name):
     """
     Ajouter un mode à un canal
@@ -366,6 +369,7 @@ def get_config(name):
     return jsonify(channel.to_dict()), 200
 
 @app.route('/channel/<name>/invite', methods=['POST'])
+@require_role("admin")
 def invite_user(name):
     """
     Inviter un utilisateur dans un canal
@@ -410,6 +414,7 @@ def invite_user(name):
     return jsonify({"message": "Utilisateur invité"}), 200
 
 @app.route('/channel/<name>/ban', methods=['POST'])
+@require_role("admin")
 def ban_user(name):
     """
     Bannir un utilisateur d’un canal
