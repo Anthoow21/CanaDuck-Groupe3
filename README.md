@@ -7,14 +7,14 @@ Le but de notre (micro)-service est la gestion des canaux IRC, c'est-à-dire des
 - Private : true, false
 
 Les objectifs à faire sont : 
-|Tâche|Description|Fini ?|Test|
+|Tâche|Description|Fini ?|Tester|
 |-|-|-|-|
-|GET /channel | Liste des serveurs publics|Oui|Oui|
-|POST /channel | Créer un nouveau canal|Non|Oui|
+|GET /channel | Liste des serveurs publics|Oui|Non|
+|POST /channel | Créer un nouveau canal|Non|Non|
 |GET /channel/<nom>/users| Affiche les utilisateurs du canal |Oui|Non|
 |PATCH /channel/<nom>| Modification du sujet / mode du canal|Non|Non|
-|POST /channel/<nom>/topic|Modifier uniquement le sujet|Non|Oui|
-|POST /channel/<nom>/mode|Modifier uniquement le mode (privé, public, lecture seule)|Non|Oui|
+|POST /channel/<nom>/topic|Modifier uniquement le sujet|Non|Non|
+|POST /channel/<nom>/mode|Modifier uniquement le mode (privé, public, lecture seule)|Non|Non|
 |GET /channel/<nom>/config|Récupère toute la config du canal|Oui|Non|
 |POST /channel/<nom>/invite|Inviter une personne|Non|Non|
 |POST /channel/<nom>/ban|Bannir une personne|Non|Non|
