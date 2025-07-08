@@ -3,6 +3,7 @@
 import requests
 
 SERVICE_URL = '127.0.0.1'
+AUTH = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwc2V1ZG8iOiJyb2dlciIsInJvbGVzIjpbIm1vZGVyYXRvciJdLCJleHAiOjIwMDAwMDAwMDB9.E_fb6fM8MZzgP5W1B10b-GLSVJWOERo8SG9A3HgQsJk'
 
 def scenario_one(channel: str):
     """
@@ -10,8 +11,9 @@ def scenario_one(channel: str):
     """
 
     data = {"name": channel, "private": False}
+    headers = {"authorization": AUTH}
 
-    requests.post(f'{SERVICE_URL}/channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
     
     r = requests.get(f'{SERVICE_URL}/channel')
     assert r.status_code == 201
@@ -27,8 +29,9 @@ def scenario_two(channel: str):
     """
 
     data = {"name": channel, "private": True}
+    headers = {"authorization": AUTH}
 
-    requests.post(f'{SERVICE_URL}/channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
     
     r = requests.get(f'{SERVICE_URL}/channel')
     assert r.status_code == 201
@@ -44,8 +47,9 @@ def scenario_three():
     """
 
     data = {"name": "", "private": False}
+    headers = {"authorization": AUTH}
 
-    requests.post(f'{SERVICE_URL}/channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
     
     r = requests.get(f'{SERVICE_URL}/channel')
     assert r.status_code == 400
@@ -59,12 +63,13 @@ def scenario_four(channel: str):
     """
 
     data = {"name": channel, "private": False}
+    headers = {"authorization": AUTH}
 
     # Create a channel
-    requests.post(f'{SERVICE_URL}/channel', json=data)
+    requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
 
     # Atempt to create the same channel again
-    r = requests.post(f'{SERVICE_URL}/channel', json=data)
+    r = requests.post(f'{SERVICE_URL}/channel', json=data, headers=headers)
     assert r.status_code == 409
 
     requests.delete(f'{SERVICE_URL}/channel/{channel}')
@@ -74,3 +79,4 @@ if __name__ == '__main__':
     scenario_one('testCreation')
     scenario_two('testCreation')
     scenario_three()
+    scenario_four('testCreation')
