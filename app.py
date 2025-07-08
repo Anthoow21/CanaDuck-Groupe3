@@ -4,7 +4,9 @@ from models import db
 from flasgger import Swagger
 from functools import wraps
 import jwt
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 JWT_SECRET = "on-ny-arrivera-jamais-enfin-peut-etre"
@@ -81,15 +83,14 @@ app.config['SWAGGER'] = {
 
 swagger = Swagger(app)
 
-app.config["SQLALCHEMY_DATABARE_URI"] = {
-    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-}
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
 
 with app.app_context():
     db.create_all()
-    
-db.init_app(app)
 
 @app.route('/channel', methods=['GET'])
 def list_channels():
